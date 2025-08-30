@@ -37,8 +37,9 @@ class Config:
     @classmethod
     def validate_config(cls):
         """Valida la configurazione"""
+        # In modalità demo, l'API key non è richiesta
         if not cls.GOOGLE_API_KEY:
-            raise ValueError("GOOGLE_API_KEY non trovata nel file .env")
+            print("⚠️ GOOGLE_API_KEY non trovata - modalità demo attiva")
         
         # Crea la directory di output se non esiste
         cls.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

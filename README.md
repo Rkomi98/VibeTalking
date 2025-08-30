@@ -51,8 +51,8 @@ sudo dnf install python3-devel portaudio-devel gtk3-devel gobject-introspection-
 uv pip install -r requirements.txt
 ```
 
-### 3. Configura l'API Key
-Crea un file `.env` nella directory principale:
+### 3. Configura l'API Key (Opzionale)
+Per la trascrizione reale, crea un file `.env` nella directory principale:
 ```bash
 # .env
 GOOGLE_API_KEY=la_tua_api_key_qui
@@ -64,6 +64,8 @@ TONE_ANALYSIS_ENABLED=true
 ANIMATION_ENABLED=true
 OUTPUT_DIR=./recordings
 ```
+
+**Nota**: Senza API key, l'app funziona in modalità demo con trascrizione simulata.
 
 ### 4. Avvia l'Applicazione
 ```bash
