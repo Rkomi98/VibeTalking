@@ -2,9 +2,9 @@
 
 # 🎤 VibeTalking — DataPizza Console Edition
 
-[![Stars](https://img.shields.io/github/stars/mcalcaterra/VibeTalking?style=for-the-badge)](https://github.com/mcalcaterra/VibeTalking/stargazers)
-[![Forks](https://img.shields.io/github/forks/mcalcaterra/VibeTalking?style=for-the-badge)](https://github.com/mcalcaterra/VibeTalking/network/members)
-[![Issues](https://img.shields.io/github/issues/mcalcaterra/VibeTalking?style=for-the-badge)](https://github.com/mcalcaterra/VibeTalking/issues)
+[![Stars](https://img.shields.io/github/stars/mcalcaterra/VibeTalking?style=for-the-badge)](https://github.com/Rkomi98/VibeTalking/stargazers)
+[![Forks](https://img.shields.io/github/forks/mcalcaterra/VibeTalking?style=for-the-badge)](https://github.com/Rkomi98/VibeTalking/network/members)
+[![Issues](https://img.shields.io/github/issues/mcalcaterra/VibeTalking?style=for-the-badge)](https://github.com/Rkomi98/VibeTalking/issues)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](#)
 
 <br/>
