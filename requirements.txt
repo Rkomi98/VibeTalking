@@ -1,6 +1,3 @@
-# Librerie principali
 python-dotenv==1.0.1
-requests  # Per le chiamate API a Google Speech-to-Text
-
-# Librerie standard Python (già incluse)
-# wave, asyncio, threading, tkinter, json, pathlib
+requests
+datapizzai==3.0.8

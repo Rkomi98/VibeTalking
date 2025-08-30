@@ -1,173 +1,125 @@
-# 🎤 VibeTalking
+<div align="center">
 
-**Applicazione di Registrazione Audio con Analisi del Tono AI per Fedora Linux**
+# 🎤 VibeTalking — DataPizza Console Edition
 
-VibeTalking è un'applicazione innovativa che registra l'audio durante meeting o sessioni di parlato, trascrive il contenuto e analizza il tono della voce utilizzando l'intelligenza artificiale. L'app include visualizzazioni dinamiche che cambiano in base al tono rilevato.
+[![Stars](https://img.shields.io/github/stars/mcalcaterra/VibeTalking?style=for-the-badge)](https://github.com/mcalcaterra/VibeTalking/stargazers)
+[![Forks](https://img.shields.io/github/forks/mcalcaterra/VibeTalking?style=for-the-badge)](https://github.com/mcalcaterra/VibeTalking/network/members)
+[![Issues](https://img.shields.io/github/issues/mcalcaterra/VibeTalking?style=for-the-badge)](https://github.com/mcalcaterra/VibeTalking/issues)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](#)
 
-## ✨ Funzionalità
+<br/>
 
-### 🎯 Funzionalità Base
-- **Registrazione Audio**: Cattura audio dal microfono in tempo reale
-- **Trascrizione Automatica**: Converte l'audio in testo utilizzando Gemini AI
-- **Riassunto Intelligente**: Genera riassunti concisi delle registrazioni
+<img src="https://img.shields.io/badge/Powered%20by-DataPizzaAI%20%26%20Gemini%202.0%20Flash-ff69b4?style=for-the-badge" />
 
-### 🚀 Funzionalità Avanzate
-- **Analisi del Tono**: Rileva e classifica il tono della voce (entusiasta, calmo, preoccupato, ecc.)
-- **Visualizzazione Dinamica**: Animazioni grafiche che cambiano in base al tono rilevato
-- **Interfaccia Moderna**: GUI nativa GTK ottimizzata per Fedora Linux
-- **Salvataggio Automatico**: Salva registrazioni e analisi in formato JSON
+<br/>
 
-## 🛠️ Tecnologie Utilizzate
+<p>
+VibeTalking è un'app console che registra audio dal microfono (arecord/ALSA) e lo analizza con una pipeline <b>DataPizzaAI</b> sfruttando <b>Gemini 2.0 Flash</b>:
+<b>Trascrizione → Analisi del tono → Riassunto</b>. Zero crash, esperienza liscia su Linux.
+</p>
 
-- **Python 3.13+** - Linguaggio principale
-- **GTK 3** - Interfaccia grafica nativa
-- **DataPizzaAI** - Integrazione con Gemini AI per trascrizione e analisi
-- **PyAudio** - Registrazione audio
-- **Cairo** - Rendering grafico per le animazioni
-
-## 📋 Requisiti di Sistema
-
-- **OS**: Fedora Linux (testato su Fedora 42)
-- **Python**: 3.13 o superiore
-- **Audio**: PulseAudio o PipeWire
-- **Memoria**: Minimo 4GB RAM
-- **Spazio**: 500MB liberi
-
-## 🚀 Installazione
-
-### 1. Clona il Repository
-```bash
-git clone https://github.com/tuousername/VibeTalking.git
-cd VibeTalking
-```
-
-### 2. Installa le Dipendenze
-```bash
-# Esegui lo script di installazione automatica
-./install_dependencies.sh
-
-# Oppure installa manualmente:
-sudo dnf install python3-devel portaudio-devel gtk3-devel gobject-introspection-devel
-uv pip install -r requirements.txt
-```
-
-### 3. Configura l'API Key (Opzionale)
-Per la trascrizione reale, crea un file `.env` nella directory principale:
-```bash
-# .env
-GOOGLE_API_KEY=la_tua_api_key_qui
-
-# Configurazioni opzionali
-DEFAULT_SAMPLE_RATE=44100
-DEFAULT_CHANNELS=1
-TONE_ANALYSIS_ENABLED=true
-ANIMATION_ENABLED=true
-OUTPUT_DIR=./recordings
-```
-
-**Nota**: Senza API key, l'app funziona in modalità demo con trascrizione simulata.
-
-### 4. Avvia l'Applicazione
-```bash
-python main.py
-```
-
-## 🎮 Come Usare
-
-1. **Avvia l'applicazione** con `python main.py`
-2. **Premi "Inizia Registrazione"** per iniziare a registrare
-3. **Parla normalmente** - vedrai la visualizzazione animata
-4. **Premi "Ferma Registrazione"** quando hai finito
-5. **Clicca "Analizza Ultimo"** per avviare l'analisi AI
-6. **Visualizza i risultati** nell'area di testo in basso
-
-## 🎨 Visualizzazione del Tono
-
-L'applicazione mostra diverse visualizzazioni basate sul tono rilevato:
-
-- **🟠 Entusiasta**: Animazioni calde con particelle fluttuanti
-- **🔵 Calmo**: Onde blu rilassanti
-- **🔴 Arrabbiato**: Pulsazioni rosse intense  
-- **🟡 Felice**: Colori gialli brillanti
-- **⚫ Neutrale**: Visualizzazione grigia statica
-
-## 📁 Struttura del Progetto
-
-```
-VibeTalking/
-├── main.py                 # Entry point dell'applicazione
-├── src/
-│   ├── config.py          # Configurazione
-│   ├── audio/             # Moduli audio
-│   │   └── recorder.py    # Registrazione audio
-│   ├── ai/                # Moduli AI
-│   │   └── analyzer.py    # Analisi con Gemini
-│   ├── gui/               # Interfaccia grafica
-│   │   ├── main_window.py # Finestra principale
-│   │   └── tone_visualizer.py # Visualizzatore tono
-│   └── utils/             # Utilità
-├── recordings/            # Directory registrazioni
-├── requirements.txt       # Dipendenze Python
-└── install_dependencies.sh # Script installazione
-```
-
-## ⚙️ Configurazione Avanzata
-
-### Personalizzare i Colori del Tono
-Modifica il dizionario `tone_colors` in `src/gui/tone_visualizer.py`:
-
-```python
-self.tone_colors = {
-    "entusiasta": (1.0, 0.6, 0.0),  # RGB personalizzato
-    "calmo": (0.0, 0.7, 1.0),
-    # ... altri toni
-}
-```
-
-### Modificare la Qualità Audio
-Nel file `.env`:
-```bash
-DEFAULT_SAMPLE_RATE=48000  # Qualità superiore
-DEFAULT_CHANNELS=2         # Stereo
-```
-
-## 🐛 Risoluzione Problemi
-
-### Errore PyAudio
-```bash
-sudo dnf install portaudio-devel
-uv pip install --force-reinstall pyaudio
-```
-
-### Errore GTK
-```bash
-sudo dnf install gtk3-devel gobject-introspection-devel
-```
-
-### Errore API Key
-- Verifica che il file `.env` esista
-- Controlla che `GOOGLE_API_KEY` sia impostata correttamente
-- Assicurati di avere crediti API disponibili
-
-## 🤝 Contribuire
-
-1. Fork del repository
-2. Crea un branch per la tua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit delle modifiche (`git commit -m 'Add some AmazingFeature'`)
-4. Push al branch (`git push origin feature/AmazingFeature`)
-5. Apri una Pull Request
-
-## 📄 Licenza
-
-Distribuito sotto licenza MIT. Vedi `LICENSE` per maggiori informazioni.
-
-## 🙏 Ringraziamenti
-
-- **DataPizza** per l'eccellente libreria AI
-- **GTK Team** per il toolkit grafico
-- **Gemini AI** per le capacità di analisi del linguaggio
+</div>
 
 ---
 
-**Sviluppato con ❤️ per la community Fedora Linux**
- An applcation for Fedora to transcribe what you say
+## ✨ Caratteristiche
+
+- 🎙️ Registrazione microfono reale (arecord/ALSA) o fallback demo
+- 🧠 Pipeline DataPizza: MediaBlock + GoogleClient (Gemini 2.0 Flash)
+- 📝 Trascrizione, 🎭 Analisi del tono, 📋 Riassunto
+- 💾 Output JSON in `recordings/`
+- 🐧 Versione console stabile (nessun XCB crash)
+
+---
+
+## 🚀 Avvio Rapido
+
+```bash
+uv venv && source .venv/bin/activate
+uv pip install -r requirements.txt
+
+# (Facoltativo) API Key Gemini
+echo "GOOGLE_API_KEY=your_api_key_here" > .env
+
+# Avvio
+python main_console.py
+```
+
+Suggerimento: se il microfono non è quello giusto, imposta la scheda ALSA prima di avviare:
+```bash
+arecord -l   # lista dispositivi
+export ALSA_PCM_CARD=1
+export ALSA_PCM_DEVICE=0
+```
+
+---
+
+## 🧩 Architettura
+
+- `main_console.py` — entrypoint console e UX
+- `src/audio/` — backend audio (arecord, demo; selezione automatica)
+- `src/ai/datapizza_analyzer.py` — pipeline DataPizza (MediaBlock → Trascrizione → Tono → Riassunto)
+- `src/config.py` — configurazione e variabili ambiente
+
+Pipeline DataPizza (semplificata):
+```
+WAV → MediaBlock → GoogleClient(Gemini 2.0 Flash)
+→ Trascrizione (TextBlock)
+→ Analisi Tono (JSON)
+→ Riassunto (Text)
+→ JSON su disco
+```
+
+---
+
+## 📄 Output
+
+Esempio JSON in `recordings/datapizza_analysis_*.json`:
+```json
+{
+  "file_path": "recordings/recording_20250830_151539.wav",
+  "transcription": "...",
+  "tone_analysis": {
+    "tono_principale": "neutrale",
+    "intensità": "media",
+    "confidenza": 82,
+    "emozioni_secondarie": ["calmo"],
+    "descrizione": "Tono equilibrato",
+    "suggerimenti": ["Mantieni questo ritmo"]
+  },
+  "summary": "...",
+  "timestamp": "2025-08-30T15:17:01.378789",
+  "analyzer": "datapizzai"
+}
+```
+
+---
+
+## 🛠️ Troubleshooting
+
+- Nessun audio/voce: 
+  - `arecord -l` e imposta `ALSA_PCM_CARD`/`ALSA_PCM_DEVICE`
+  - verifica permessi su dispositivi audio (`/dev/snd/*`)
+- Niente API key: funziona lo stesso (fallback)
+- Network/API error: fallback automatico al locale
+
+---
+
+## 🙌 Contribuire
+
+1. Fai un fork del repo
+2. Crea un branch feature: `git checkout -b feat/xyz`
+3. Invia una PR
+
+Se ti piace il progetto, lascia una ⭐ e fai un fork!
+
+---
+
+<div align="center">
+
+Con amore per l'Audio + AI 💜
+
+[![Stars](https://img.shields.io/github/stars/mcalcaterra/VibeTalking?style=social)](https://github.com/mcalcaterra/VibeTalking/stargazers)
+[![Forks](https://img.shields.io/github/forks/mcalcaterra/VibeTalking?style=social)](https://github.com/mcalcaterra/VibeTalking/network/members)
+
+</div>
