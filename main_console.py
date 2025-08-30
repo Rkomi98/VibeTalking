@@ -19,13 +19,22 @@ class VibeTalkingConsole:
     def __init__(self):
         self.recorder = AudioRecorder()
         self.analyzer = DataPizzaAudioAnalyzer()
+        self.current_provider = Config.AI_PROVIDER
         
     def print_header(self):
         """Stampa header dell'applicazione"""
         print("\n" + "="*60)
         print("🎤 VibeTalking - DataPizza Console Edition")
         print("="*60)
-        print("🔧 DataPizza + Gemini 2.0 Flash")
+        
+        # Mostra provider corrente
+        if self.current_provider == 'gemini':
+            print("🔧 DataPizza + Gemini 2.0 Flash (Cloud)")
+        elif self.current_provider == 'ollama':
+            print(f"🦙 DataPizza + Ollama {Config.OLLAMA_MODEL} (Locale)")
+        else:
+            print("🔧 DataPizza + Demo Mode")
+            
         print("🎯 MediaBlock + Pipeline + JSON Output")
         print("🐧 Linux Console - Zero Crash Guaranteed")
         print("="*60 + "\n")
@@ -39,7 +48,13 @@ class VibeTalkingConsole:
         print("4️⃣  Analizza Ultimo Audio")
         print("5️⃣  Mostra File Registrati")
         print("6️⃣  Test Completo (Registra + Analizza)")
+        print("7️⃣  Cambia Provider AI")
         print("0️⃣  Esci")
+        print("-" * 40)
+        
+        # Mostra provider corrente nel menu
+        provider_icon = "🔧" if self.current_provider == 'gemini' else "🦙" if self.current_provider == 'ollama' else "🔧"
+        print(f"🤖 Provider corrente: {provider_icon} {self.current_provider.upper()}")
         print("-" * 40)
     
     def record_audio(self, duration: int) -> str:
@@ -108,11 +123,23 @@ class VibeTalkingConsole:
         print(f"📁 File Audio: {Path(results.get('file_path', '')).name}")
         print(f"💾 Risultati JSON: {Path(output_file).name}")
         print(f"🔧 Analyzer: {results.get('analyzer', 'N/A')}")
+        
+        # Mostra provider utilizzato
+        ai_provider = results.get('ai_provider', 'N/A')
+        provider_icon = "🔧" if ai_provider == 'gemini' else "🦙" if ai_provider == 'ollama' else "🔧"
+        print(f"🤖 Provider AI: {provider_icon} {ai_provider.upper()}")
+        
         print(f"⏰ Timestamp: {results.get('timestamp', 'N/A')}")
         
         print("\n📝 TRASCRIZIONE:")
         print("-" * 30)
         transcription = results.get('transcription', 'N/A')
+        
+        # Avviso per Ollama
+        if ai_provider == 'ollama':
+            print("⚠️  NOTA: Ollama non può trascrivere audio reale.")
+            print("    Trascrizione basata su analisi durata/volume del file:")
+        
         print(f"'{transcription}'")
         
         print("\n🎭 ANALISI DEL TONO:")
@@ -197,6 +224,93 @@ class VibeTalkingConsole:
         
         return str(sorted(audio_files)[-1])
     
+    def change_ai_provider(self):
+        """Cambia il provider AI"""
+        print("\n🤖 CAMBIO PROVIDER AI")
+        print("="*40)
+        print("Scegli il provider AI da utilizzare:")
+        print()
+        print("1️⃣  Gemini 2.0 Flash (Cloud) - Trascrizione audio nativa")
+        print("2️⃣  Ollama/Gemma3n (Locale) - Solo analisi testo (NO trascrizione)")
+        print("3️⃣  Demo Mode - Simulazione senza AI")
+        print("0️⃣  Annulla")
+        print("-" * 40)
+        
+        while True:
+            try:
+                choice = input("👉 Scegli provider (0-3): ").strip()
+                
+                if choice == "0":
+                    print("❌ Operazione annullata")
+                    return
+                
+                elif choice == "1":
+                    new_provider = 'gemini'
+                    provider_name = "Gemini 2.0 Flash"
+                    break
+                
+                elif choice == "2":
+                    new_provider = 'ollama'
+                    provider_name = f"Ollama {Config.OLLAMA_MODEL}"
+                    break
+                
+                elif choice == "3":
+                    new_provider = 'demo'
+                    provider_name = "Demo Mode"
+                    break
+                
+                else:
+                    print("❌ Opzione non valida, riprova")
+            
+            except KeyboardInterrupt:
+                print("\n❌ Operazione annullata")
+                return
+        
+        # Verifica disponibilità del provider
+        if new_provider == 'gemini' and not Config.GOOGLE_API_KEY:
+            print("⚠️ ATTENZIONE: GOOGLE_API_KEY non configurata!")
+            print("Il provider Gemini funzionerà in modalità demo.")
+            confirm = input("Continuare comunque? (s/N): ").strip().lower()
+            if confirm not in ['s', 'si', 'y', 'yes']:
+                print("❌ Operazione annullata")
+                return
+        
+        elif new_provider == 'ollama':
+            print(f"🦙 Verifica disponibilità Ollama su {Config.OLLAMA_BASE_URL}...")
+            print("⚠️  IMPORTANTE: Ollama NON può trascrivere audio reale!")
+            print("    La trascrizione sarà basata su analisi durata/volume del file.")
+            print("    Ollama verrà usato solo per analisi del tono e riassunto.")
+            
+            try:
+                import requests
+                response = requests.get(f"{Config.OLLAMA_BASE_URL}/api/tags", timeout=5)
+                if response.status_code != 200:
+                    raise Exception("Ollama non risponde")
+                print("✅ Ollama disponibile")
+            except Exception as e:
+                print(f"⚠️ ATTENZIONE: Ollama non disponibile ({e})")
+                print("Il provider Ollama funzionerà in modalità demo.")
+            
+            confirm = input("Continuare con Ollama? (s/N): ").strip().lower()
+            if confirm not in ['s', 'si', 'y', 'yes']:
+                print("❌ Operazione annullata")
+                return
+        
+        # Cambia provider
+        print(f"\n🔄 Cambio provider da {self.current_provider.upper()} a {new_provider.upper()}...")
+        
+        # Aggiorna configurazione runtime
+        Config.AI_PROVIDER = new_provider
+        self.current_provider = new_provider
+        
+        # Ricrea l'analyzer con il nuovo provider
+        print("🔄 Ricaricamento analyzer...")
+        self.analyzer = DataPizzaAudioAnalyzer()
+        
+        print(f"✅ Provider cambiato con successo!")
+        print(f"🤖 Nuovo provider: {provider_name}")
+        print()
+    
     async def run(self):
         """Loop principale dell'applicazione"""
         self.print_header()
@@ -205,7 +319,7 @@ class VibeTalkingConsole:
             self.print_menu()
             
             try:
-                choice = input("👉 Scegli opzione (0-6): ").strip()
+                choice = input("👉 Scegli opzione (0-7): ").strip()
                 
                 if choice == "0":
                     print("\n👋 Arrivederci!")
@@ -232,6 +346,9 @@ class VibeTalkingConsole:
                 
                 elif choice == "6":
                     await self.test_complete()
+                
+                elif choice == "7":
+                    self.change_ai_provider()
                 
                 else:
                     print("❌ Opzione non valida")
