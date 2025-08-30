@@ -1,4 +1,4 @@
-<div align="center">
+<div align="left">
 
 # 🎤 VibeTalking — DataPizza Console Edition
 
@@ -6,12 +6,6 @@
 [![Forks](https://img.shields.io/github/forks/Rkomi98/VibeTalking?style=for-the-badge)](https://github.com/Rkomi98/VibeTalking/network/members)
 [![Issues](https://img.shields.io/github/issues/Rkomi98/VibeTalking?style=for-the-badge)](https://github.com/Rkomi98/VibeTalking/issues)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](#)
-
-<br/>
-
-<img src="https://img.shields.io/badge/Powered%20by-DataPizzaAI%20%26%20Gemini%202.0%20Flash-ff69b4?style=for-the-badge" />
-
-<br/>
 
 <p>
 VibeTalking è un'app console che registra audio dal microfono (arecord/ALSA) e lo analizza con una pipeline <b>DataPizzaAI</b> sfruttando <b>Gemini 2.0 Flash</b>:
