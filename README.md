@@ -1,7 +1,6 @@
 <div align="left">
 
-# VibeTalking — Console Edition
-
+# VibeTalking
 <!-- Repo status -->
 [![Last commit](https://img.shields.io/github/last-commit/Rkomi98/VibeTalking?style=flat-square)](https://github.com/Rkomi98/VibeTalking/commits)
 [![Issues](https://img.shields.io/github/issues-raw/Rkomi98/VibeTalking?style=flat-square)](https://github.com/Rkomi98/VibeTalking/issues)
@@ -17,6 +16,8 @@
 [![DataPizzaAI](https://img.shields.io/badge/Lib-DataPizzaAI-8A2BE2?style=flat-square)](#)
 [![Requests](https://img.shields.io/badge/Lib-requests-5A9?style=flat-square)](#)
 [![dotenv](https://img.shields.io/badge/Lib-python--dotenv-4B8BBE?style=flat-square)](#)
+
+<img width="1024" height="1024" alt="immagine" src="https://github.com/user-attachments/assets/dbc69d4c-1ce9-4a60-a25f-508f47d0f9f8" />
 
 Piccola app da terminale per registrare audio (o simularlo), inviarlo a una pipeline di analisi basata su DataPizza/Gemini e salvare tutto in JSON. Niente GUI: semplice, stabile, pronta per Linux.
 
