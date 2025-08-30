@@ -1,0 +1,17 @@
+# Librerie principali
+datapizzai==3.0.8
+python-dotenv==1.0.1
+
+# Audio processing
+pyaudio==0.2.11
+wave
+soundfile==0.12.1
+
+# GUI (GTK)
+PyGObject==3.46.0
+pycairo==1.25.1
+
+# Utilities
+numpy==2.3.2
+asyncio
+threading
