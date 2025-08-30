@@ -1,119 +1,108 @@
 <div align="left">
 
-# 🎤 VibeTalking — DataPizza Console Edition
+# VibeTalking — Console Edition
 
-[![Stars](https://img.shields.io/github/stars/Rkomi98/VibeTalking?style=for-the-badge)](https://github.com/Rkomi98/VibeTalking/stargazers)
-[![Forks](https://img.shields.io/github/forks/Rkomi98/VibeTalking?style=for-the-badge)](https://github.com/Rkomi98/VibeTalking/network/members)
-[![Issues](https://img.shields.io/github/issues/Rkomi98/VibeTalking?style=for-the-badge)](https://github.com/Rkomi98/VibeTalking/issues)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](#)
+<!-- Repo status -->
+[![Last commit](https://img.shields.io/github/last-commit/Rkomi98/VibeTalking?style=flat-square)](https://github.com/Rkomi98/VibeTalking/commits)
+[![Issues](https://img.shields.io/github/issues-raw/Rkomi98/VibeTalking?style=flat-square)](https://github.com/Rkomi98/VibeTalking/issues)
+[![PRs](https://img.shields.io/github/issues-pr-raw/Rkomi98/VibeTalking?style=flat-square)](https://github.com/Rkomi98/VibeTalking/pulls)
+[![Repo size](https://img.shields.io/github/repo-size/Rkomi98/VibeTalking?style=flat-square)](#)
+[![Stars](https://img.shields.io/github/stars/Rkomi98/VibeTalking?style=social)](https://github.com/Rkomi98/VibeTalking/stargazers)
 
-<p>
-VibeTalking è un'app console che registra audio dal microfono (arecord/ALSA) e lo analizza con una pipeline <b>DataPizzaAI</b> sfruttando <b>Gemini 2.0 Flash</b>:
-<b>Trascrizione → Analisi del tono → Riassunto</b>. Zero crash, esperienza liscia su Linux.
-</p>
+<!-- Tech stack -->
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white&style=flat-square)](#)
+[![ALSA](https://img.shields.io/badge/Audio-ALSA/arecord-ff69b4?style=flat-square)](#)
+[![GTK optional](https://img.shields.io/badge/GUI-Opzionale_(console)-lightgrey?style=flat-square)](#)
+[![AI](https://img.shields.io/badge/AI-Gemini_2.0_Flash-4285F4?logo=google&logoColor=white&style=flat-square)](#)
+[![DataPizzaAI](https://img.shields.io/badge/Lib-DataPizzaAI-8A2BE2?style=flat-square)](#)
+[![Requests](https://img.shields.io/badge/Lib-requests-5A9?style=flat-square)](#)
+[![dotenv](https://img.shields.io/badge/Lib-python--dotenv-4B8BBE?style=flat-square)](#)
+
+Piccola app da terminale per registrare audio (o simularlo), inviarlo a una pipeline di analisi basata su DataPizza/Gemini e salvare tutto in JSON. Niente GUI: semplice, stabile, pronta per Linux.
 
 </div>
 
 ---
 
-## ✨ Caratteristiche
+## Caratteristiche
 
-- 🎙️ Registrazione microfono reale (arecord/ALSA) o fallback demo
-- 🧠 Pipeline DataPizza: MediaBlock + GoogleClient (Gemini 2.0 Flash)
-- 📝 Trascrizione, 🎭 Analisi del tono, 📋 Riassunto
-- 💾 Output JSON in `recordings/`
-- 🐧 Versione console stabile (nessun XCB crash)
+- Registrazione dal microfono via ALSA/arecord, con fallback demo.
+- Pipeline DataPizza: MediaBlock → Trascrizione → Analisi tono → Riassunto.
+- Output completo in JSON nella cartella `recordings/`.
+- Funziona anche senza API key: attiva un fallback locale.
 
 ---
 
-## 🚀 Avvio Rapido
+## Avvio rapido
 
 ```bash
 uv venv && source .venv/bin/activate
 uv pip install -r requirements.txt
 
-# (Facoltativo) API Key Gemini
-echo "GOOGLE_API_KEY=your_api_key_here" > .env
+# (facoltativo) API key Gemini
+echo "GOOGLE_API_KEY=la_tua_api_key" > .env
 
-# Avvio
+# avvio
 python main_console.py
 ```
 
-Suggerimento: se il microfono non è quello giusto, imposta la scheda ALSA prima di avviare:
+Se il microfono non è quello giusto, selezionalo così:
 ```bash
-arecord -l   # lista dispositivi
+arecord -l   # elenca i dispositivi
 export ALSA_PCM_CARD=1
 export ALSA_PCM_DEVICE=0
 ```
 
+Se `datapizzai` è su registry privato, configura l’accesso con `.netrc` o passa `--index-url/--extra-index-url` a `uv pip`.
+
 ---
 
-## 🧩 Architettura
+## Architettura
 
-- `main_console.py` — entrypoint console e UX
-- `src/audio/` — backend audio (arecord, demo; selezione automatica)
-- `src/ai/datapizza_analyzer.py` — pipeline DataPizza (MediaBlock → Trascrizione → Tono → Riassunto)
-- `src/config.py` — configurazione e variabili ambiente
+- `main_console.py`: entrypoint e flusso da terminale.
+- `src/audio/`: backend di registrazione (arecord reale, oppure demo).
+- `src/ai/datapizza_analyzer.py`: pipeline DataPizza (Gemini) con fallback locale.
+- `src/config.py`: configurazione e variabili d’ambiente.
 
-Pipeline DataPizza (semplificata):
+Schema sintetico:
 ```
-WAV → MediaBlock → GoogleClient(Gemini 2.0 Flash)
+WAV → MediaBlock → GoogleClient (Gemini 2.0 Flash)
 → Trascrizione (TextBlock)
-→ Analisi Tono (JSON)
+→ Analisi del tono (JSON)
 → Riassunto (Text)
-→ JSON su disco
+→ Salvataggio su disco
 ```
 
 ---
 
-## 📄 Output
+## Output
 
-Esempio JSON in `recordings/datapizza_analysis_*.json`:
-```json
-{
-  "file_path": "recordings/recording_20250830_151539.wav",
-  "transcription": "...",
-  "tone_analysis": {
-    "tono_principale": "neutrale",
-    "intensità": "media",
-    "confidenza": 82,
-    "emozioni_secondarie": ["calmo"],
-    "descrizione": "Tono equilibrato",
-    "suggerimenti": ["Mantieni questo ritmo"]
-  },
-  "summary": "...",
-  "timestamp": "2025-08-30T15:17:01.378789",
-  "analyzer": "datapizzai"
-}
-```
+I risultati si trovano in `recordings/datapizza_analysis_*.json`. Contengono percorso del file audio, trascrizione, analisi del tono, riassunto, timestamp e il tipo di analyzer usato.
 
 ---
 
-## 🛠️ Troubleshooting
+## Risoluzione problemi
 
-- Nessun audio/voce: 
-  - `arecord -l` e imposta `ALSA_PCM_CARD`/`ALSA_PCM_DEVICE`
-  - verifica permessi su dispositivi audio (`/dev/snd/*`)
-- Niente API key: funziona lo stesso (fallback)
-- Network/API error: fallback automatico al locale
+- Nessun audio registrato:
+  - `arecord -l` e imposta `ALSA_PCM_CARD` / `ALSA_PCM_DEVICE`.
+  - verifica i permessi su `/dev/snd/*`.
+- Mancanza API key / problemi di rete:
+  - parte il fallback locale (la pipeline restituisce comunque dati di test).
+- `datapizzai` non si installa:
+  - è probabilmente su un registry privato. Usa `.netrc` o specifica l’index URL.
 
 ---
 
-## 🙌 Contribuire
+## Contribuire
 
-1. Fai un fork del repo
-2. Crea un branch feature: `git checkout -b feat/xyz`
-3. Invia una PR
+1. Fork del repository
+2. Branch dedicato: `git checkout -b feat/xyz`
+3. Pull request
 
-Se ti piace il progetto, lascia una ⭐ e fai un fork!
+Se trovi utile il progetto, una ⭐ fa piacere.
 
 ---
 
 <div align="center">
-
-Con amore per l'Audio + AI 💜
-
-[![Stars](https://img.shields.io/github/stars/mcalcaterra/VibeTalking?style=social)](https://github.com/mcalcaterra/VibeTalking/stargazers)
-[![Forks](https://img.shields.io/github/forks/mcalcaterra/VibeTalking?style=social)](https://github.com/mcalcaterra/VibeTalking/network/members)
-
+Fatto per Linux, con un’attenzione alla semplicità.
 </div>
