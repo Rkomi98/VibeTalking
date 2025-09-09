@@ -36,15 +36,21 @@ class VibeTalkingConsole:
         print("1️⃣  Registra Audio (3 secondi)")
         print("2️⃣  Registra Audio (10 secondi)")
         print("3️⃣  Registra Audio (30 secondi)")
-        print("4️⃣  Analizza Ultimo Audio")
-        print("5️⃣  Mostra File Registrati")
-        print("6️⃣  Test Completo (Registra + Analizza)")
+        print("4️⃣  Registra fino a INVIO 🔴")
+        print("5️⃣  Analizza Ultimo Audio")
+        print("6️⃣  Mostra File Registrati")
+        print("7️⃣  Test Completo (Registra + Analizza)")
         print("0️⃣  Esci")
         print("-" * 40)
     
-    def record_audio(self, duration: int) -> str:
-        """Registra audio per la durata specificata"""
-        print(f"\n🎤 Avvio registrazione ({duration} secondi)...")
+    def record_audio(self, duration: int = None) -> str:
+        """Registra audio per la durata specificata o fino a Invio"""
+        if duration is None:
+            print(f"\n🎤 REGISTRAZIONE CONTINUA")
+            print("=" * 40)
+            print("🔴 Premi INVIO per fermare la registrazione")
+        else:
+            print(f"\n🎤 Avvio registrazione ({duration} secondi)...")
         
         # Avvia registrazione
         recording_file = self.recorder.start_recording()
@@ -54,11 +60,41 @@ class VibeTalkingConsole:
         
         print(f"✅ Registrazione avviata: {Path(recording_file).name}")
         
-        # Countdown
-        for i in range(duration, 0, -1):
-            print(f"⏳ {i}...", end=" ", flush=True)
-            time.sleep(1)
-        print("\n")
+        if duration is None:
+            # Registrazione continua fino a Invio
+            print("🔴 Registrazione in corso... (premi INVIO per fermare)")
+            print("📢 Parla ora!")
+            
+            import sys
+            import select
+            
+            # Mostra timer in tempo reale
+            start_time = time.time()
+            try:
+                while True:
+                    elapsed = time.time() - start_time
+                    print(f"\r⏱️  Registrando... {elapsed:.1f}s - Premi INVIO per fermare", end="", flush=True)
+                    
+                    # Controlla se è stato premuto Invio (Linux/Unix)
+                    if sys.stdin in select.select([sys.stdin], [], [], 0.1)[0]:
+                        sys.stdin.readline()
+                        break
+                    
+                    time.sleep(0.1)
+                    
+            except KeyboardInterrupt:
+                print("\n⚠️ Interruzione utente (Ctrl+C)")
+            
+            elapsed_total = time.time() - start_time
+            print(f"\n⏹️  Registrazione fermata dopo {elapsed_total:.1f}s")
+            
+        else:
+            # Registrazione a durata fissa (modalità esistente)
+            # Countdown
+            for i in range(duration, 0, -1):
+                print(f"⏳ {i}...", end=" ", flush=True)
+                time.sleep(1)
+            print("\n")
         
         # Ferma registrazione
         saved_file = self.recorder.stop_recording()
@@ -205,7 +241,7 @@ class VibeTalkingConsole:
             self.print_menu()
             
             try:
-                choice = input("👉 Scegli opzione (0-6): ").strip()
+                choice = input("👉 Scegli opzione (0-7): ").strip()
                 
                 if choice == "0":
                     print("\n👋 Arrivederci!")
@@ -221,16 +257,19 @@ class VibeTalkingConsole:
                     self.record_audio(30)
                 
                 elif choice == "4":
+                    self.record_audio()  # Registrazione continua senza durata
+                
+                elif choice == "5":
                     latest = self.get_latest_recording()
                     if latest:
                         await self.analyze_audio(latest)
                     else:
                         print("❌ Nessun file audio trovato. Registra prima!")
                 
-                elif choice == "5":
+                elif choice == "6":
                     self.show_recordings()
                 
-                elif choice == "6":
+                elif choice == "7":
                     await self.test_complete()
                 
                 else:

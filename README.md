@@ -28,6 +28,7 @@ Piccola app da terminale per registrare audio (o simularlo), inviarlo a una pipe
 ## Caratteristiche
 
 - Registrazione dal microfono via ALSA/arecord, con fallback demo.
+- **Registrazione flessibile**: durata fissa (3s/10s/30s) o continua fino a INVIO.
 - Pipeline DataPizza: MediaBlock → Trascrizione → Analisi tono → Riassunto.
 - Output completo in JSON nella cartella `recordings/`.
 - Funziona anche senza API key: attiva un fallback locale.
